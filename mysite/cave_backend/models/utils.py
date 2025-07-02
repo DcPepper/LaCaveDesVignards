@@ -1,7 +1,5 @@
 from django.db import models
 
-class Alliances(models.Model):
-    pass
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
 
-class Taste(models.Model):
-    pass

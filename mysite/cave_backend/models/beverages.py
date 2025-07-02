@@ -1,25 +1,19 @@
 from django.db import models
 
-class Beverage(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.FloatField()
-    stock = models.IntegerField()
-    quantity = models.IntegerField()
-    photos = models.CharField(max_length=100)
-    pourcentage = models.IntegerField()
+from cave_backend.models.purchase import Item
 
-class Vine(Beverage):
+
+class Vine(Item):
     couleur = models.CharField(max_length=20)
     origin = models.CharField(max_length=20)
     year = models.IntegerField()
     variety = models.CharField(max_length=100)
 
-class Biere(Beverage):
+class Biere(Item):
     variety = models.CharField(max_length=20)
     brand = models.CharField(max_length=20)
 
-class Spirits(Beverage):
+class Spirits(Item):
     variety = models.CharField(max_length=20)
     brand = models.CharField(max_length=20)
 
