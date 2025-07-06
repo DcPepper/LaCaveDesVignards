@@ -3,7 +3,7 @@ import {
 } from "react-router";
 import Layout from "./components/Layout";
 import "./App.css";
-import {VineList, Vine, VineWrapper} from "./components/Vine";
+import { VineList, Vine, VineWrapper } from "./components/Vine";
 
 export const router = createBrowserRouter([
     {
@@ -11,30 +11,30 @@ export const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: "/",
+                path: "wines",
                 element: <VineWrapper />,
                 children: [
                     {
-                        path: "wines",
+                        path: "",
                         element: <VineList />,
-                        loader: async ({request})  => {
+                        loader: async ({ request }) => {
                             const searchParams = new URL(request.url).searchParams;
                             const searchTerm = searchParams.get("q");
                             let res = await fetch(`http://localhost:8000/api/wines?q=${searchTerm || ""}`)
                             return res;
                         },
-                        
+
                     },
                     {
-                        path: "wines/:id",
+                        path: ":id",
                         element: <Vine />,
-                        loader: async ({params})  => {
+                        loader: async ({ params }) => {
                             let res = await fetch(`http://localhost:8000/api/wine/${params.id}/`)
                             return res;
                         },
                     }
                 ]
-                
+
             }
         ]
     },

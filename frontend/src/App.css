@@ -6,10 +6,9 @@
 }
 
 html {
-  background-color: brown;
+  background-color: #fff;
 }
 
 .shrink {
   width: min-content;
 }
-
