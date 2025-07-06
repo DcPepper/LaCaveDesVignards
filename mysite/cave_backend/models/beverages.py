@@ -9,6 +9,9 @@ class Vine(Item):
     year = models.IntegerField()
     variety = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.name} ({self.year})"
+
 class Biere(Item):
     variety = models.CharField(max_length=20)
     brand = models.CharField(max_length=20)

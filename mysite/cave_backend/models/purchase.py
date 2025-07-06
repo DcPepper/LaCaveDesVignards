@@ -9,6 +9,7 @@ class Item(models.Model):
     quantity = models.IntegerField()
     photos = models.CharField(max_length=100)
     pourcentage = models.IntegerField()
+    selection = models.BooleanField(default=False)
     
 class ChartItem(models.Model):
     item = models.ForeignKey(to=Item, on_delete=models.CASCADE)

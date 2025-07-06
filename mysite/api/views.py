@@ -7,8 +7,19 @@ class VineView(viewsets.ModelViewSet):
     """
     Vine viewset for api
     """
-    queryset = Vine.objects.all()
     serializer_class = VineSerializer
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        
+        queryset = Vine.objects.all()
+        username = self.request.query_params.get('mvp')
+        if username is not None:
+            queryset = queryset.filter(selection=True)
+        return queryset
 
 class BiereView(viewsets.ModelViewSet):
     """

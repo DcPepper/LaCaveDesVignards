@@ -4,7 +4,7 @@ from rest_framework import routers
 from .views import VineView, BiereView
 
 router = routers.DefaultRouter()
-router.register(r'wine', VineView)
+router.register(r'wine', VineView, basename="vine")
 router.register(r'biere', BiereView)
 
 urlpatterns = [
