@@ -30,7 +30,7 @@ const customTheme = createTheme({
 const root = document.getElementById("root")!;
 
 ReactDOM.createRoot(root).render(
-  <ThemeProvider theme={customTheme}>
+
     <RouterProvider router={router} />
-  </ThemeProvider>
+
 );
