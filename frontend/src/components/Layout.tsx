@@ -4,8 +4,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import wine from "../assets/wine.png"
 import { useState } from "react";
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import { NavLink, Outlet } from "react-router";
-import { Typography } from "@mui/material";
+import { Link, NavLink, Outlet, useNavigate } from "react-router";
+import { Menu, MenuItem, Paper, Typography } from "@mui/material";
 
 const BoxWrapper = styled(Box)(({ theme }) => ({
     transition: "transform 0.25s ease",
@@ -72,7 +72,20 @@ const PageHeader = styled(Box, {
 
 export default function Layout() {
     const [expand, setExpand] = useState(false);
-    const [open, setOpen] = useState("");
+    const [open, setOpen] = useState(false);
+    const [lastVisited, setLastVisited] = useState("");
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    function handleClick(event) {
+        if (anchorEl !== event.currentTarget) {
+            setAnchorEl(event.currentTarget);
+        }
+        setLastVisited(event.currentTarget.id)
+    }
+
+    function handleClose() {
+        setAnchorEl(null);
+    }
 
     const items = {
         "drinks": ["vins", "bieres", "spiriteux"],
@@ -95,44 +108,73 @@ export default function Layout() {
         <>
             <PageHeader isExpanded={expand}>
                 <Title />
-                <PageLinks onHover={(s) => setOpen(_ => s)} onLeave={() => setOpen(_ => "")} />
+                <PageLinks onHover={handleClick} onLeave={() => setOpen(false)} />
             </PageHeader>
-            <PageOption open={open} displayList={items[open] || []} />
+            <PageOption anchorEl={anchorEl} onClose={handleClose} displayList={items[lastVisited] || []} />
             <Outlet />
         </>
     )
 }
 
 function Title() {
+    const navigate = useNavigate();
     return (
-        <Box sx={{ display: 'flex', height: "100%", alignItems: 'center', gap: 3 }}>
+        <Box sx={{ display: 'flex', height: "100%", alignItems: 'center', gap: 3, cursor: 'pointer' }} onClick={() => navigate("/")}>
             <img src={wine} alt="vin" />
             <Typography>Les Vignards à vélo</Typography>
         </Box>
     )
 }
 
-function PageLinks({ onHover, onLeave }: { onHover: (s: string) => void, onLeave: () => void }) {
+function PageLinks({ onHover, onLeave }: { onHover: (event: React.MouseEvent<HTMLElement>) => void, onLeave: () => void }) {
     return (
         <BoxWrapper onMouseLeave={onLeave} sx={{ display: 'flex', height: "100%", gap: 2 }}>
-            <Typography onMouseEnter={() => onHover("drinks")}>Les Boissons</Typography>
-            <Typography onMouseEnter={() => onHover("food")}>Autres</Typography>
+            <Typography onMouseEnter={onHover} id='drinks'>Les Boissons</Typography>
+            <Typography onMouseEnter={onHover} id='food'>Autres</Typography>
             <Typography>A propos</Typography>
         </BoxWrapper>
     )
 }
 
-function PageOption({ open, displayList }: { open: string, displayList: string[] }) {
-    const [keepOpen, setKeepOpen] = useState(open);
+function PageOption({ displayList, anchorEl, onClose }: { onClose: () => void, displayList: string[], anchorEl: null | HTMLElement }) {
     const theme = useTheme();
-    console.log(keepOpen, open)
+
+    const translateItem = (item: string) => {
+        switch (item) {
+            case "vins":
+                return "/wines"
+            default:
+                return ""
+        }
+    }
     return (
-        <>
-            <Box onMouseLeave={() => setKeepOpen("")} onMouseEnter={() => setKeepOpen((_) => open)} sx={{ display: 'flex', transform: keepOpen != "" || open != "" ? "scaleY(1)" : "scaleY(0)", backgroundColor: theme.palette.secondary.light, flexDirection: 'column', alignItems: 'center' }}>
+        <Paper sx={{ width: '100%' }}>
+            <Menu
+                open={Boolean(anchorEl)}
+                slotProps={{
+                    list: {
+                        onMouseLeave: onClose,
+                    },
+                    paper: {
+                        sx: {
+                            width: '50%',
+                            backgroundColor: theme.palette.primary.contrastText,
+                            color: "black",
+                            left: '50% !important',
+                            transform: 'translateX(-50%) !important',
+                        }
+                    }
+                }}
+            >
                 {displayList.map(item => {
-                    return <Typography key={`item-${item}`} fontWeight='bold'>{item}</Typography>
+                    const link = translateItem(item)
+                    return (
+                        <MenuItem key={`item-${item}`} sx={{ '&:hover': { backgroundColor: theme.palette.primary.light }, textTransform: 'capitalize' }}>
+                            <Link to={link}>{item}</Link>
+                        </MenuItem>
+                    )
                 })}
-            </Box>
-        </>
+            </Menu>
+        </Paper>
     )
 }
