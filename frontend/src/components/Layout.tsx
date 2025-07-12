@@ -72,7 +72,6 @@ const PageHeader = styled(Box, {
 
 export default function Layout() {
     const [expand, setExpand] = useState(false);
-    const [open, setOpen] = useState(false);
     const [lastVisited, setLastVisited] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -84,13 +83,11 @@ export default function Layout() {
     }
 
     function handleClose() {
+
         setAnchorEl(null);
+
     }
 
-    const items = {
-        "drinks": ["vins", "bieres", "spiriteux"],
-        "food": ["nourriture"]
-    }
     return (
         // <PageHeader isExpanded={expand} >
         //     <ClickAwayListener onClickAway={() => setExpand(false)}>
@@ -108,9 +105,8 @@ export default function Layout() {
         <>
             <PageHeader isExpanded={expand}>
                 <Title />
-                <PageLinks onHover={handleClick} onLeave={() => setOpen(false)} />
+                <PageLinks onHover={handleClick} onLeave={handleClose} lastVisited={lastVisited} anchorEl={anchorEl} />
             </PageHeader>
-            <PageOption anchorEl={anchorEl} onClose={handleClose} displayList={items[lastVisited] || []} />
             <Outlet />
         </>
     )
@@ -126,12 +122,23 @@ function Title() {
     )
 }
 
-function PageLinks({ onHover, onLeave }: { onHover: (event: React.MouseEvent<HTMLElement>) => void, onLeave: () => void }) {
+function PageLinks({ onHover, onLeave, anchorEl, lastVisited }:
+    {
+        anchorEl: HTMLElement | null,
+        onHover: (event: React.MouseEvent<HTMLElement>) => void,
+        onLeave: () => void,
+        lastVisited: string,
+    }) {
+    const items = {
+        "drinks": ["vins", "bieres", "spiriteux"],
+        "food": ["nourriture"]
+    }
     return (
         <BoxWrapper onMouseLeave={onLeave} sx={{ display: 'flex', height: "100%", gap: 2 }}>
             <Typography onMouseEnter={onHover} id='drinks'>Les Boissons</Typography>
             <Typography onMouseEnter={onHover} id='food'>Autres</Typography>
             <Typography>A propos</Typography>
+            <PageOption anchorEl={anchorEl} onClose={onLeave} displayList={items[lastVisited] || []} />
         </BoxWrapper>
     )
 }
@@ -148,33 +155,36 @@ function PageOption({ displayList, anchorEl, onClose }: { onClose: () => void, d
         }
     }
     return (
-        <Paper sx={{ width: '100%' }}>
-            <Menu
-                open={Boolean(anchorEl)}
-                slotProps={{
-                    list: {
-                        onMouseLeave: onClose,
-                    },
-                    paper: {
-                        sx: {
-                            width: '50%',
-                            backgroundColor: theme.palette.primary.contrastText,
-                            color: "black",
-                            left: '50% !important',
-                            transform: 'translateX(-50%) !important',
-                        }
+        <Menu
+            open={Boolean(anchorEl)}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center"
+            }}
+            sx={{
+                pointerEvents: 'none'
+            }}
+            slotProps={{
+                list: {
+                    onMouseLeave: onClose,
+                },
+                paper: {
+                    sx: {
+                        width: '50%',
+                        backgroundColor: theme.palette.primary.contrastText,
+                        color: "black",
                     }
-                }}
-            >
-                {displayList.map(item => {
-                    const link = translateItem(item)
-                    return (
-                        <MenuItem key={`item-${item}`} sx={{ '&:hover': { backgroundColor: theme.palette.primary.light }, textTransform: 'capitalize' }}>
-                            <Link to={link}>{item}</Link>
-                        </MenuItem>
-                    )
-                })}
-            </Menu>
-        </Paper>
+                }
+            }}
+        >
+            {displayList.map(item => {
+                const link = translateItem(item)
+                return (
+                    <MenuItem key={`item-${item}`} sx={{ '&:hover': { backgroundColor: theme.palette.primary.light }, textTransform: 'capitalize' }}>
+                        <Link to={link}>{item}</Link>
+                    </MenuItem>
+                )
+            })}
+        </Menu>
     )
 }
