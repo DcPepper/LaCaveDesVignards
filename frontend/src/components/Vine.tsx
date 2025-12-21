@@ -1,4 +1,4 @@
-import { Card, CardContent,  CardMedia,  styled,  TextField,  Typography } from "@mui/material";
+import { Card, CardContent, CardMedia, styled, TextField, Typography } from "@mui/material";
 import { Outlet, useLoaderData, useLocation } from "react-router";
 import vinfond from "../assets/vinfond.jpg";
 import Paper from '@mui/material/Paper';
@@ -7,13 +7,13 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
-import {  useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 const CardContentWrapper = styled(CardContent)(({ theme }) => ({
     transition: 'width height 0.5s ease-in-out',
     display: 'flex',
-    flexDirection:'row',
+    flexDirection: 'row',
     flexWrap: 'wrap',
     gap: "20px",
     [theme.breakpoints.down('sm')]: {
@@ -33,26 +33,26 @@ export function VineList() {
     const [q, setQ] = useState("");
     let navigate = useNavigate();
     return (
-        <Card sx={{backgroundColor:'inherit', borderRadius: "unset", height: '100vh', flex:1, width: '100%', display: 'flex', flexDirection: "column", gap:2, overflow:'scroll', alignItems:'center'}}>
+        <Card sx={{ backgroundColor: 'inherit', borderRadius: "unset", height: '100vh', flex: 1, width: '100%', display: 'flex', flexDirection: "column", gap: 2, overflow: 'scroll', alignItems: 'center' }}>
             <div style={{
-                minHeight:"50vh",
-                width:'100%',
+                minHeight: "50vh",
+                width: '100%',
                 backgroundImage: `url(${vinfond})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPositionY: '10%',
-                display:'flex',
-                justifyContent:'center',
-                alignItems:'center'
-                }}>
-            {/* <img className='wallpaper' src={vinfond} alt="vin" style={{  width:'100%', overflowY:'hidden', height:'100%', objectFit: 'cover', objectPosition:'top'}} /> */}
-            <Typography variant="h4" sx={{color: "white", fontWeight: 'bold', textTransform:'uppercase', textAlign:'center'}}>La carte de nos vins</Typography>
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                {/* <img className='wallpaper' src={vinfond} alt="vin" style={{  width:'100%', overflowY:'hidden', height:'100%', objectFit: 'cover', objectPosition:'top'}} /> */}
+                <Typography variant="h4" sx={{ color: "white", fontWeight: 'bold', textTransform: 'uppercase', textAlign: 'center' }}>La carte de nos vins</Typography>
             </div>
             <Paper
                 component="form"
                 sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '90%' }}
-                >
+            >
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Recherche avancée"
@@ -62,9 +62,9 @@ export function VineList() {
                 <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={(e) => {
                     e.preventDefault()
                     navigate({
-                    pathname: "/wines",
-                    search: `?q=${q}`,
-                })
+                        pathname: "/wines",
+                        search: `?q=${q}`,
+                    })
                 }}>
                     <SearchIcon />
                 </IconButton>
@@ -89,28 +89,28 @@ interface Wine {
     selection: boolean
 }
 
-function VineCard({wine}: {wine: Wine}) {
+function VineCard({ wine }: { wine: Wine }) {
     console.log(wine)
     let navigate = useNavigate();
     return (
-        <Card  
+        <Card
             onClick={() => navigate({
                 pathname: `/wines/${wine.id}`,
                 search: "",
-            })} 
-            key={`wine-${wine.id}`} 
-            sx={{backgroundColor:'inherit', cursor: 'pointer', border: "1px solid", borderColor: wine.selection ? "gold": "black"}}>
-                <CardMedia 
+            })}
+            key={`wine-${wine.id}`}
+            sx={{ backgroundColor: 'inherit', cursor: 'pointer', border: "1px solid", borderColor: wine.selection ? "gold" : "black" }}>
+            <CardMedia
                 sx={{
-                    height:"200px",
+                    height: "200px",
                     backgroundSize: "contain"
                 }}
-                    image={`/src/assets/${wine.photos}`}
-                />
+                image={`/src/assets/${wine.photos}`}
+            />
 
-                <CardContent sx={{textAlign: 'center'}}>
-                {wine.name} 
-                </CardContent>
+            <CardContent sx={{ textAlign: 'center' }}>
+                {wine.name}
+            </CardContent>
         </Card>
     )
 }
@@ -119,25 +119,25 @@ export function Vine() {
     let wine = useLoaderData();
     let navigate = useNavigate();
     return (
-        <Card  
+        <Card
             onClick={() => navigate({
                 pathname: `/wines/${wine.id}`,
                 search: "",
-            })} 
-            key={`wine-${wine.id}`} 
-            sx={{backgroundColor:'inherit', cursor: 'pointer', border: "1px solid"}}>
-                <CardMedia 
+            })}
+            key={`wine-${wine.id}`}
+            sx={{ backgroundColor: 'inherit', cursor: 'pointer', border: "1px solid" }}>
+            <CardMedia
                 sx={{
-                    height:"200px",
+                    height: "200px",
                     backgroundSize: "contain"
                 }}
-                    image={`/src/assets/${wine.photos}`}
-                />
+                image={`/src/assets/${wine.photos}`}
+            />
 
-                <CardContent sx={{textAlign: 'center'}}>
+            <CardContent sx={{ textAlign: 'center' }}>
                 <h2>{wine.name} </h2>
                 {wine.description}
-                </CardContent>
+            </CardContent>
         </Card>
     )
 }
@@ -154,15 +154,12 @@ export function VineWrapper() {
     }
     return (
         <div role="presentation">
-            <Breadcrumbs aria-label="breadcrumb"  onClick={handleClick}>
+            <Breadcrumbs aria-label="breadcrumb" onClick={handleClick}>
                 <Link underline="hover" color="inherit" href="/">
-                Vins
+                    Vins
                 </Link>
-                <Typography sx={{ color: 'text.primary' }}>
-                 {path[path.length - 1]}
-                    </Typography>
             </Breadcrumbs>
-            <Outlet /> 
+            <Outlet />
         </div>
     )
 }
