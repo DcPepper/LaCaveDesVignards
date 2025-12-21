@@ -144,10 +144,10 @@ export function Vine() {
 
 export function VineWrapper() {
     let location = useLocation();
-    let navigate = useNavigate();
     let path = location.pathname.split("/")
     console.log(path)
-
+    
+    let navigate = useNavigate();
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
         navigate('/wines/')
